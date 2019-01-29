@@ -1,0 +1,82 @@
+#!/usr/bin/env php
+<?php
+
+include 'vendor/autoload.php';
+
+// ---------------
+// Configure
+// ---------------
+$config = [
+    'logs' => [
+        'alias' => 'l',
+        'help' => 'Path to log files.',
+    ],
+    'domain' => [
+        'alias' => 'd',
+        'help' => 'Permit to remove internal referer.',
+    ],
+    'format' => [
+        'alias' => 'f',
+        'help' => 'Could be a string or a class extending LogLine.'
+                 .'Default: `\PiedWeb\LogsAnalyzer\ApacheLogLine`',
+    ],
+    'filter' => [
+        'alias' => 'fi',
+        'help' => 'Must be callable. Eg: `\PiedWeb\LogsAnalyzer\Filters::googleBot`',
+    ],
+    'resume' => [
+        'alias' => 'r',
+        'help' => 'Concatenate Request and Status to count number of hit.'
+                 .'Date and time are kept for the first hit only !'
+                 .'Or you can use your own Analyzer extending `PiedWeb\LogsAnalyzer\LogsAnalyzer`',
+        'default' => true, // but means false, see https://github.com/cheprasov/php-cli-args/pull/8
+    ],
+];
+
+$CliArgs = new CliArgs\CliArgs($config);
+if ($CliArgs->isFlagExists('help', 'h')) {
+    echo $CliArgs->getHelp('help');
+    echo PHP_EOL.PHP_EOL;
+    die();
+}
+
+if ($CliArgs->getArg('logs') === null) {
+    throw new \Exception('--logs is required');
+}
+
+use \PiedWeb\LogsAnalyzer\LogsAnalyzer;
+use \PiedWeb\LogsAnalyzer\LogsResumer;
+use \PiedWeb\LogsAnalyzer\ApacheLogLine;
+
+$analyzer = $CliArgs->getArg('resume') !== true ? // weird ? see https://github.com/cheprasov/php-cli-args/pull/8
+    (class_exists($CliArgs->getArg('resume')) ? $CliArgs->getArg('resume')  : LogsResumer::class)
+    : LogsAnalyzer::class
+;
+$analyzer = new $analyzer($CliArgs->getArg('format') ?? ApacheLogLine::class, $CliArgs->getArg('domain'));
+
+//$analyzer->setFilter(function ($line) { return stripos($line->getUserAgent(), 'googlebot') !== false; });
+if ($CliArgs->getArg('filter'))
+    $analyzer->setFilter($CliArgs->getArg('filter'));
+
+$files = explode('|', $CliArgs->getArg('logs'));
+$results = [];
+foreach ($files as $file) {
+    $results = array_merge($results, $analyzer->parse(trim($file)));
+}
+
+
+if (isset(array_values($results)[0])) {
+    $file = __DIR__.'/../data/'.uniqid().'.csv';
+    $fp = fopen($file, 'w');
+
+    $header = array_values($results)[0]->getKeys();
+    fputcsv($fp, $header);
+    foreach ($results as $line) {
+        //fputcsv($fp, get_object_vars($line));
+        fputcsv($fp, $line->get());
+    }
+    fclose($fp);
+    echo PHP_EOL;
+    echo 'RESULTS:'.PHP_EOL;
+    echo realpath($file).PHP_EOL;
+}
