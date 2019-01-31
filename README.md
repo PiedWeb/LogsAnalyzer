@@ -13,6 +13,8 @@
 
 This package can parse, filter and export to CSV via PHP or CLI your APACHE/Nginx/Microsoft/WhatYouWant logs.
 
+FR: https://piedweb.com/seo/logs
+
 ## Install
 
 Via [Packagist](https://packagist.org/packages/piedweb/logs-analyzer)
