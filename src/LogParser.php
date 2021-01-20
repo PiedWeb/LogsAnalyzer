@@ -8,7 +8,7 @@ class LogParser extends \Kassner\LogParser\LogParser
     protected $type;
 
     // To be removed when this pull request is accepted : https://github.com/kassner/log-parser/pull/38
-    protected $patterns = array(
+    protected $patterns = [
         '%%' => '(?P<percent>\%)',
         '%a' => '(?P<remoteIp>)',
         '%A' => '(?P<localIp>)',
@@ -32,7 +32,7 @@ class LogParser extends \Kassner\LogParser\LogParser
         '\%\{(?P<name>[a-zA-Z]+)(?P<name2>[-]?)(?P<name3>[a-zA-Z]+)\}i' => '(?P<Header\\1\\3>.*?)',
         '%D' => '(?P<timeServeRequest>[0-9]+)',
         '%S' => '(?P<scheme>http|https)',
-    );
+    ];
 
     public function setDomain(string $domain)
     {
@@ -47,7 +47,7 @@ class LogParser extends \Kassner\LogParser\LogParser
     public function parse($line)
     {
         //var_dump($this->pcreFormat); die();
-        if (!preg_match($this->pcreFormat, $line, $matches)) {
+        if (! preg_match($this->pcreFormat, $line, $matches)) {
             throw new \Kassner\LogParser\FormatException($line);
         }
 
@@ -62,9 +62,6 @@ class LogParser extends \Kassner\LogParser\LogParser
         return $entry;
     }
 
-    /**
-     * @return LogLine
-     */
     protected function createEntry()
     {
         return null === $this->type ? new LogLine($this->domain) : new $this->type($this->domain);

@@ -5,10 +5,11 @@
 # Logs Analyzer
 
 [![Latest Version](https://img.shields.io/github/tag/PiedWeb/LogsAnalyzer.svg?style=flat&label=release)](https://github.com/PiedWeb/LogsAnalyzer/tags)
-[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](https://github.com/PiedWeb/LogsAnalyzer/blob/master/LICENSE)
-[![Build Status](https://img.shields.io/travis/PiedWeb/LogsAnalyzer/master.svg?style=flat)](https://travis-ci.org/PiedWeb/LogsAnalyzer)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](LICENSE)
+[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/PiedWeb/LogsAnalyzer/Tests?label=tests)](https://github.com/PiedWeb/LogsAnalyzer/actions)
 [![Quality Score](https://img.shields.io/scrutinizer/g/PiedWeb/LogsAnalyzer.svg?style=flat)](https://scrutinizer-ci.com/g/PiedWeb/LogsAnalyzer)
-[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/PiedWeb/LogsAnalyzer.svg?style=flat)](https://scrutinizer-ci.com/g/PiedWeb/LogsAnalyzer/code-structure)
+[![Code Coverage](https://codecov.io/gh/PiedWeb/LogsAnalyzer/branch/main/graph/badge.svg)](https://codecov.io/gh/PiedWeb/LogsAnalyzer/branch/main)
+[![Type Coverage](https://shepherd.dev/github/PiedWeb/LogsAnalyzer/coverage.svg)](https://shepherd.dev/github/PiedWeb/LogsAnalyzer)
 [![Total Downloads](https://img.shields.io/packagist/dt/piedweb/logs-analyzer.svg?style=flat)](https://packagist.org/packages/piedweb/logs-analyzer)
 
 This package can parse, filter and export to CSV via PHP or CLI your APACHE/Nginx/Microsoft/WhatYouWant logs.
@@ -19,7 +20,7 @@ FR: https://piedweb.com/seo/logs
 
 Via [Packagist](https://packagist.org/packages/piedweb/logs-analyzer)
 
-``` bash
+```bash
 $ composer require piedweb/logs-analyzer
 ```
 
@@ -28,13 +29,15 @@ $ composer require piedweb/logs-analyzer
 Tu use it directly in php, see [bin/analyzer](https://github.com/PiedWeb/LogsAnalyzer/blob/master/bin/analyzer) example.
 
 Else, you can use the command tools to filter and export to CSV your log files. Get the last args list via `--help` :
-``` bash
+
+```bash
 bin/analyzer --help
 ```
 
 ### About `--format`
 
 Default parser work with Apache Access Logs :
+
 ```
 ^(?P<host>[a-zA-Z0-9\-\._:]+) (?P<logname>(?:-|[\w-]+)) (?P<user>(?:-|[\w\-\.]+)) \[(?P<time>\d{2}/(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)/\d{4}:\d{2}:\d{2}:\d{2} (?:-|\+)\d{4})\] "(?P<request>(?:(?:[A-Z]+) .+? HTTP/(1\.0|1\.1|2\.0))|-|)" (?P<status>\d{3}|-) (?P<responseBytes>(\d+|-)) "(?P<HeaderReferer>.*?)" "(?P<HeaderUserAgent>.*?)"$
 ```
@@ -47,7 +50,7 @@ This arg permits to have only unique request (`requestMethod` + `url` + `status`
 
 ## Testing
 
-``` bash
+```bash
 $ composer test
 ```
 

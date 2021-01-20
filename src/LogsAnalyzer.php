@@ -30,7 +30,7 @@ class LogsAnalyzer
 
     protected function checkFile(string $filename): bool
     {
-        return !file_exists($filename) || !is_readable($filename);
+        return ! file_exists($filename) || ! is_readable($filename);
     }
 
     protected function filter($line)
@@ -50,7 +50,7 @@ class LogsAnalyzer
         }
 
         $lineCounter = 1;
-        while (!feof($handle)) {
+        while (! feof($handle)) {
             $line = fgets($handle);
             $line = $line ? $this->parser->parse($line) : null;
             $this->record($line, $lineCounter);

@@ -76,7 +76,6 @@ if (isset(array_values($results)[0])) {
         fputcsv($fp, $line->get());
     }
     fclose($fp);
-    echo PHP_EOL;
-    echo 'RESULTS:'.PHP_EOL;
+    echo 'Results:'.PHP_EOL;
     echo realpath($file).PHP_EOL;
 }

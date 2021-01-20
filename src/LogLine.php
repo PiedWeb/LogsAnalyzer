@@ -153,7 +153,9 @@ class LogLine
 
     public function setResponseBytes($responseBytes)
     {
-        $this->responseBytes = $responseBytes;
+        if ('-' != $responseBytes) {
+            $this->responseBytes = $responseBytes;
+        }
     }
 
     public function getReferer()
@@ -163,21 +165,23 @@ class LogLine
 
     protected function isInternalReferer($referer)
     {
+        if ($this->domain === null) {
+            return false;
+        }
+
         return 0 === strpos($referer, 'http://'.$this->domain) || 0 === strpos($referer, 'https://'.$this->domain);
     }
 
     public function setHeaderReferer($referer)
     {
-        if (!empty($referer) && '-' != $referer) {
+        if (! empty($referer) && '-' != $referer) {
             $this->setReferer($referer);
         }
     }
 
     public function setReferer($referer)
     {
-        $referer = $this->isInternalReferer($referer) ? null : $referer;
-
-        $this->referer = $referer;
+        $this->referer = $this->isInternalReferer($referer) ? null : $referer;
     }
 
     public function getUseragent()
@@ -209,6 +213,9 @@ class LogLine
     {
         $dotted = preg_split('/[.]+/', $dotted);
 
-        return (float) ($dotted[0] * 16777216) + ($dotted[1] * 65536) + ($dotted[2] * 256) + ($dotted[3]);
+        return (float) (intval($dotted[0]) * 16777216)
+            + (intval($dotted[1]) * 65536)
+            + (intval($dotted[2]) * 256)
+            + (intval($dotted[3]));
     }
 }

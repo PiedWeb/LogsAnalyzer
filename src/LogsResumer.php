@@ -8,7 +8,7 @@ class LogsResumer extends LogsAnalyzer
     {
         if ($line && $this->filter($line)) {
             $key = $line->getMethod().'+'.$line->getUrl().'+'.$line->getStatus();
-            if (!isset($this->logs[$key])) {
+            if (! isset($this->logs[$key])) {
                 $this->logs[$key] = $line;
             }
             $this->logs[$key]->incrementHit();
